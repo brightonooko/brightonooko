@@ -13,11 +13,15 @@
       "methods": ["POST"]
     },
     {
-      "handle": "filesystem"
+      "src": "/",
+      "dest": "/profile.html"
     },
     {
-      "src": "/(.*)",
-      "dest": "server.js"
+      "src": "/profile.html",
+      "dest": "/profile.html"
+    },
+    {
+      "handle": "filesystem"
     }
   ],
   "headers": [
