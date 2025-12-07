@@ -9,7 +9,14 @@
   "routes": [
     {
       "src": "/send-message",
-      "dest": "server.js"
+      "dest": "server.js",
+      "methods": ["POST"]
+    },
+    {
+      "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|svg|ico|pdf))",
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      }
     },
     {
       "src": "/(.*)",

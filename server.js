@@ -2,12 +2,38 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const twilio = require('twilio');
 const cors = require('cors');
+const path = require('path');
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.')); // Serve static files from current directory
+
+// Determine the correct base path for Vercel vs local
+// In Vercel serverless functions, files are in the project root (process.cwd())
+const basePath = process.cwd();
+
+// Serve static files (CSS, JS, images) from project root
+app.use(express.static(basePath));
+
+// Serve the main HTML file at root
+app.get('/', (req, res) => {
+    const htmlPath = path.resolve(basePath, 'profile.html');
+    res.sendFile(htmlPath, (err) => {
+        if (err) {
+            console.error('Error serving profile.html:', err);
+            console.error('Base path:', basePath);
+            console.error('Attempted path:', htmlPath);
+            res.status(500).send('Error loading page. Check server logs.');
+        }
+    });
+});
+
+// Also serve profile.html directly if accessed
+app.get('/profile.html', (req, res) => {
+    const htmlPath = path.resolve(basePath, 'profile.html');
+    res.sendFile(htmlPath);
+});
 
 // Email configuration - only initialize if credentials are available
 let transporter = null;
