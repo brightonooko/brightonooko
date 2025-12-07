@@ -16,8 +16,9 @@ const basePath = process.cwd();
 // Serve static files (CSS, JS, images) from project root
 app.use(express.static(basePath));
 
-// Serve the main HTML file at root
-app.get('/', (req, res) => {
+// Serve the main HTML file at root for all HTTP methods
+// This ensures POST, PUT, etc. to / also serve the HTML (maintains old behavior)
+app.all('/', (req, res) => {
     const htmlPath = path.resolve(basePath, 'profile.html');
     res.sendFile(htmlPath, (err) => {
         if (err) {
