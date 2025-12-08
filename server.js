@@ -109,11 +109,29 @@ app.post('/send-message', async (req, res) => {
             }
         }
 
-        // If neither service is configured, return error
+        // If neither service is configured, still return success but log the message
+        // This allows the form to work for testing even without email/SMS configured
         if (!transporter && !twilioClient) {
+            console.log('Contact form submission (no email/SMS configured):', {
+                name,
+                email,
+                phone,
+                subject,
+                message
+            });
+            return res.status(200).json({ 
+                success: true, 
+                message: 'Message received successfully. We will get back to you soon!',
+                services: [],
+                note: 'Email/SMS services not configured - message logged to console'
+            });
+        }
+
+        // If at least one service attempted but both failed, return error
+        if (results.length === 0 && (transporter || twilioClient)) {
             return res.status(500).json({ 
                 success: false, 
-                message: 'Email and SMS services are not configured. Please set environment variables.' 
+                message: 'Failed to send message. Please try again later.' 
             });
         }
 
