@@ -9,31 +9,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Determine the correct base path for Vercel vs local
-// In Vercel serverless functions, files are in the project root (process.cwd())
-const basePath = process.cwd();
-
 // Serve static files (CSS, JS, images) from project root
-app.use(express.static(basePath));
+app.use(express.static(__dirname));
 
-// Serve the main HTML file at root for all HTTP methods
-// This ensures POST, PUT, etc. to / also serve the HTML (maintains old behavior)
-app.all('/', (req, res) => {
-    const htmlPath = path.resolve(basePath, 'profile.html');
-    res.sendFile(htmlPath, (err) => {
-        if (err) {
-            console.error('Error serving profile.html:', err);
-            console.error('Base path:', basePath);
-            console.error('Attempted path:', htmlPath);
-            res.status(500).send('Error loading page. Check server logs.');
-        }
-    });
+// Serve the main HTML file at root
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'profile.html'));
 });
 
 // Also serve profile.html directly if accessed
 app.get('/profile.html', (req, res) => {
-    const htmlPath = path.resolve(basePath, 'profile.html');
-    res.sendFile(htmlPath);
+    res.sendFile(path.join(__dirname, 'profile.html'));
 });
 
 // Email configuration - only initialize if credentials are available
@@ -160,4 +146,8 @@ if (require.main === module) {
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });
-}
+}Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
