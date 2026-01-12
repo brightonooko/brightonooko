@@ -94,11 +94,21 @@ if (contactForm) {
         submitBtn.disabled = true;
 
         try {
-            // Replace with your actual form submission logic
-            await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
-            
-            showNotification('Message sent successfully!', 'success');
-            contactForm.reset();
+            // Use Formspree to handle form submission
+            const response = await fetch('https://formspree.io/f/xyzgzpkd', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                showNotification('Message sent successfully!', 'success');
+                contactForm.reset();
+            } else {
+                showNotification('Failed to send message. Please try again.', 'error');
+            }
         } catch (error) {
             showNotification('Failed to send message. Please try again.', 'error');
         } finally {
