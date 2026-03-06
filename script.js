@@ -9,6 +9,10 @@ const navbar  = document.querySelector('.navbar');
 const overlay = document.querySelector('.nav-overlay');
 
 function openMenu() {
+    // Remove then reflow so CSS animations replay every time
+    navbar.classList.remove('open');
+    void navbar.offsetWidth;
+
     navbar.classList.add('open');
     overlay.classList.add('show');
     menuBtn.setAttribute('aria-expanded', 'true');
