@@ -14,10 +14,15 @@ app.use(express.static(__dirname));
 
 // Serve the main HTML file at root
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'profile.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Also serve profile.html directly if accessed
+// Also serve index.html directly if accessed
+app.get('/index.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Serve profile.html
 app.get('/profile.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'profile.html'));
 });
@@ -137,7 +142,6 @@ app.post('/send-message', async (req, res) => {
 });
 
 // Export the app for Vercel serverless functions
-// Vercel expects a handler function when using @vercel/node
 module.exports = app;
 
 // For local development
@@ -146,8 +150,4 @@ if (require.main === module) {
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });
-}Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+}

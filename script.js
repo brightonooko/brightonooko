@@ -3,6 +3,48 @@ const header = document.querySelector('.header');
 const navSections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('.navbar a');
 
+// ── Mobile menu ──────────────────────────────────────────────────────────────
+const menuBtn = document.querySelector('.menu-btn');
+const navbar  = document.querySelector('.navbar');
+const overlay = document.querySelector('.nav-overlay');
+
+function openMenu() {
+    navbar.classList.add('open');
+    overlay.classList.add('show');
+    menuBtn.setAttribute('aria-expanded', 'true');
+    menuBtn.querySelector('i').className = 'bx bx-x';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeMenu() {
+    navbar.classList.remove('open');
+    overlay.classList.remove('show');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    menuBtn.querySelector('i').className = 'bx bx-menu';
+    document.body.style.overflow = '';
+}
+
+if (menuBtn && navbar && overlay) {
+    menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        navbar.classList.contains('open') ? closeMenu() : openMenu();
+    });
+
+    // Close on overlay click
+    overlay.addEventListener('click', closeMenu);
+
+    // Close when a nav link is clicked
+    navbar.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMenu();
+    });
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 function setActiveNav() {
     const scrollPosition = window.pageYOffset + 150;
     navLinks.forEach(link => link.classList.remove('active'));
